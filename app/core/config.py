@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
 
-    # CORS
-    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:5173"]
+    # CORS — plain string to avoid pydantic-settings auto JSON decoding
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173"
 
     @field_validator("DEBUG", mode="before")
     @classmethod
@@ -43,17 +43,17 @@ class Settings(BaseSettings):
                 return False
         return v
 
-    @field_validator("ALLOWED_ORIGINS", mode="before")
-    @classmethod
-    def parse_origins(cls, v):
-        if isinstance(v, str):
-            value = v.strip()
-            if not value:
-                return []
-            if value.startswith("["):
+    @property
+    def allowed_origins_list(self) -> list[str]:
+        value = self.ALLOWED_ORIGINS.strip()
+        if not value:
+            return ["http://localhost:3000"]
+        if value.startswith("["):
+            try:
                 return json.loads(value)
-            return [origin.strip() for origin in value.split(",") if origin.strip()]
-        return v
+            except json.JSONDecodeError:
+                pass
+        return [o.strip() for o in value.split(",") if o.strip()]
 
     # Code execution sandbox
     EXECUTION_TIMEOUT_SECONDS: int = 10
