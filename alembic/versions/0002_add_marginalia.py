@@ -15,7 +15,12 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.execute("CREATE TYPE notetype AS ENUM ('intuition', 'definition', 'note', 'question')")
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE notetype AS ENUM ('intuition', 'definition', 'note', 'question');
+        EXCEPTION WHEN duplicate_object THEN NULL;
+        END $$
+    """)
     op.create_table(
         "marginalia",
         sa.Column("id", sa.Integer(), primary_key=True, index=True),
