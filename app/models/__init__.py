@@ -5,6 +5,7 @@ from app.models.problem import Problem, ProblemSubmission, ProblemCategory, Subm
 from app.models.qna import QnaLab, QnaQuestion, QnaResponse, QuestionType
 from app.models.playlist import Playlist, PlaylistItem, PlaylistType
 from app.models.progress import UserProgress, ContentType
+from app.models.marginalia import Marginalia, NoteType
 
 __all__ = [
     "User", "UserRole",
@@ -14,4 +15,5 @@ __all__ = [
     "QnaLab", "QnaQuestion", "QnaResponse", "QuestionType",
     "Playlist", "PlaylistItem", "PlaylistType",
     "UserProgress", "ContentType",
+    "Marginalia", "NoteType",
 ]

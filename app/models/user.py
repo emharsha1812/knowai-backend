@@ -33,3 +33,4 @@ class User(Base, TimestampMixin):
     submissions = relationship("ProblemSubmission", back_populates="user", lazy="dynamic")
     qna_responses = relationship("QnaResponse", back_populates="user", lazy="dynamic")
     progress_records = relationship("UserProgress", back_populates="user", lazy="dynamic")
+    marginalia_notes = relationship("Marginalia", back_populates="user", lazy="dynamic")
