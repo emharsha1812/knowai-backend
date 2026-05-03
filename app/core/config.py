@@ -14,14 +14,21 @@ class Settings(BaseSettings):
     # App
     APP_NAME: str = "KnowAI"
     API_V1_PREFIX: str = "/api/v1"
-    ENVIRONMENT: Literal["development", "production", "test"] = "development"
+    ENVIRONMENT: Literal["development", "production", "test"] = "production"
     DEBUG: bool = False
 
-    # Security
-    SECRET_KEY: str = "supersecretchangeme"
+    # Security — must be set via env var in production
+    SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
+
+    @field_validator("SECRET_KEY")
+    @classmethod
+    def secret_key_strong(cls, v: str) -> str:
+        if len(v) < 32:
+            raise ValueError("SECRET_KEY must be at least 32 characters")
+        return v
 
     # Database
     DATABASE_URL: str = "postgresql+asyncpg://knowai:knowai@localhost:5432/knowai"

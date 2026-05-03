@@ -86,7 +86,16 @@ async def update_me(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    for field, value in body.model_dump(exclude_unset=True).items():
+    updates = body.model_dump(exclude_unset=True)
+
+    if "username" in updates and updates["username"] != current_user.username:
+        existing = await db.execute(
+            select(User).where(User.username == updates["username"])
+        )
+        if existing.scalar_one_or_none():
+            raise HTTPException(status_code=400, detail="Username already taken")
+
+    for field, value in updates.items():
         setattr(current_user, field, value)
     db.add(current_user)
     return current_user
