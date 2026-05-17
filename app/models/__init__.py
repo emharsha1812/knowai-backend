@@ -6,6 +6,7 @@ from app.models.qna import QnaLab, QnaQuestion, QnaResponse, QuestionType
 from app.models.playlist import Playlist, PlaylistItem, PlaylistType
 from app.models.progress import UserProgress, ContentType
 from app.models.marginalia import Marginalia, NoteType
+from app.models.watch_note import WatchNote
 
 __all__ = [
     "User", "UserRole",
@@ -16,4 +17,5 @@ __all__ = [
     "Playlist", "PlaylistItem", "PlaylistType",
     "UserProgress", "ContentType",
     "Marginalia", "NoteType",
+    "WatchNote",
 ]
